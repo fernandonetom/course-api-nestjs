@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -20,7 +22,15 @@ export class CoursesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.coursesService.findOne(id);
+    const course = this.coursesService.findOne(id);
+
+    if (!course)
+      throw new HttpException(
+        `Course with ${id} not founded`,
+        HttpStatus.NOT_FOUND,
+      );
+
+    return course;
   }
 
   @Post()
