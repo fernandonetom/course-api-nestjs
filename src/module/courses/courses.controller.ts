@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
-import { updateCourseDto } from './dto/update-course.dto';
+import { UpdateCourseDto } from './dto/update-course.dto';
 
 @Controller('courses')
 export class CoursesController {
@@ -41,7 +41,7 @@ export class CoursesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCourseDto: updateCourseDto) {
+  update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto) {
     HttpException;
     return this.coursesService.update(id, updateCourseDto);
   }
