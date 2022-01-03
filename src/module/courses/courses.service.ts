@@ -4,31 +4,45 @@ import { Repository } from 'typeorm';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { Course } from './entities/course.entity';
+import { Tag } from './entities/tag.entity';
 
 @Injectable()
 export class CoursesService {
   constructor(
     @InjectRepository(Course)
     private readonly courseRepository: Repository<Course>,
+    @InjectRepository(Tag)
+    private readonly tagRepository: Repository<Tag>,
   ) {}
 
   findAll() {
-    return this.courseRepository.find();
+    return this.courseRepository.find({ relations: ['tags'] });
   }
 
   findOne(id: string) {
-    return this.courseRepository.findOne(id);
+    return this.courseRepository.findOne(id, { relations: ['tags'] });
   }
 
-  create(createCourseDto: CreateCourseDto) {
-    const course = this.courseRepository.create(createCourseDto);
+  async create(createCourseDto: CreateCourseDto) {
+    const tags = await Promise.all(
+      createCourseDto.tags.map((name) => this.preloadTagByName(name)),
+    );
+
+    const course = this.courseRepository.create({ ...createCourseDto, tags });
     return this.courseRepository.save(course);
   }
 
   async update(id: string, updateCourseDto: UpdateCourseDto) {
+    const tags =
+      updateCourseDto.tags &&
+      (await Promise.all(
+        updateCourseDto.tags.map((name: string) => this.preloadTagByName(name)),
+      ));
+
     const course = await this.courseRepository.preload({
       id: Number(id),
       ...updateCourseDto,
+      tags,
     });
 
     if (!course) {
@@ -46,5 +60,15 @@ export class CoursesService {
     }
 
     return this.courseRepository.remove(course);
+  }
+
+  private async preloadTagByName(name: string): Promise<Tag> {
+    const tag = await this.tagRepository.findOne({ name });
+
+    if (tag) {
+      return tag;
+    }
+
+    return this.tagRepository.create({ name });
   }
 }
