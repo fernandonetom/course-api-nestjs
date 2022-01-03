@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   HttpException,
   HttpStatus,
   Param,
@@ -23,8 +24,8 @@ export class CoursesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    const course = this.coursesService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    const course = await this.coursesService.findOne(id);
 
     if (!course)
       throw new HttpException(
@@ -47,6 +48,7 @@ export class CoursesController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
     return this.coursesService.remove(id);
   }
