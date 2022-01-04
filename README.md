@@ -37,7 +37,10 @@ $ npm run start:prod
 ## End points
 
 ```bash
-# get a accessToken (email: john, password: changeme)
+# Acesse a documentação OpenAPI criada utilizando o swagger
+GET /docs
+
+# get a accessToken (email: teste@teste.com, password: teste)
 POST /users/auth
 
 # list all courses
