@@ -9,7 +9,9 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
@@ -18,6 +20,7 @@ import { UpdateCourseDto } from './dto/update-course.dto';
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get('')
   findAll() {
     return this.coursesService.findAll();

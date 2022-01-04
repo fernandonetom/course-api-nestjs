@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CoursesModule } from './module/courses/courses.module';
+import { UsersModule } from './module/users/users.module';
+import { AuthModule } from './module/auth/auth.module';
 @Module({
   imports: [
     CoursesModule,
+    AuthModule,
+    UsersModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -19,7 +22,6 @@ import { CoursesModule } from './module/courses/courses.module';
       synchronize: true,
     }),
   ],
-  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
