@@ -26,6 +26,7 @@ export class CoursesController {
     return this.coursesService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const course = await this.coursesService.findOne(id);
@@ -39,17 +40,20 @@ export class CoursesController {
     return course;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createCourseDto: CreateCourseDto) {
     return this.coursesService.create(createCourseDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto) {
     HttpException;
     return this.coursesService.update(id, updateCourseDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
